@@ -1,5 +1,5 @@
 import './app.scss';
-import ReactFlowComponent from './components/reactFlow';
+import ReactFlowComponent from './components/ReactFlow';
 
 function App() {
   return (
