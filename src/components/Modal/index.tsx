@@ -2,8 +2,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import {useState } from 'react'
-import {Node,Edge} from 'react-flow-renderer';
+import { useState } from 'react'
+import { Node, Edge } from 'react-flow-renderer';
 
 type ModalComponentProps = {
   title: string;
@@ -25,7 +25,7 @@ const style = {
   overflowX: 'auto'
 };
 
-export function ModalComponent({ title, nodeContest,edgeContest }: ModalComponentProps) {
+export function ModalComponent({ title, nodeContest, edgeContest }: ModalComponentProps) {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -45,12 +45,12 @@ export function ModalComponent({ title, nodeContest,edgeContest }: ModalComponen
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
-          <Box sx={{ mt: 2 ,fontSize:'1.2rem'}}>
+            <Box sx={{ mt: 2, fontSize: '1.2rem' }}>
               <b>Cards</b>
               <pre>{JSON.stringify(nodeContest, null, 2)}</pre>
             </Box>
 
-            <Box sx={{ mt: 2, pl:10 , fontSize:'1.2rem'}}>
+            <Box sx={{ mt: 2, pl: 10, fontSize: '1.2rem' }}>
               <b>Ligaçao</b>
               <pre>{JSON.stringify(edgeContest, null, 2)}</pre>
             </Box>
