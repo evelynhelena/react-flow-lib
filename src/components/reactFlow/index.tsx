@@ -6,40 +6,32 @@ import "./styles.scss";
 import { Button, Container } from '@mui/material';
 import { ModalComponent } from '../Modal';
 import { ButtonEdge } from '../ButtonEdge';
+import { ContentNode } from '../ContentNode';
 
 
 
 const rfStyle = {
   backgroundColor: "#ffff",
-  border: "1px solid #DBDBDB",
-  color: "#fff",
-  width: '60px',
-  height: '60px',
-  /* boxShadow: '0px 2px 20px rgba(0, 159, 215, 0.8)', */
+  border: "1px solid",
+  borderColor: "#DBDBDB",
+  color: "#0B1641",
+  width: '70px',
+  height: '70px',
   borderRadius: "7px",
 }
 
-const initialNodes: Node[] = [
-  {
-    id: '1',
-    type: 'input',
-    sourcePosition: "right" as Position,
-    data: { label: '1' },
-    position: { x: 0, y: 80 },
-    style: rfStyle
-  },
-];
+const connectionLineStyle = { stroke: '#2194FF' };
 
 const edgeTypes = {
   buttonedge: ButtonEdge,
 }
 
 function ReactFlowComponent() {
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
+  const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const yPos = useRef(80);
   const xPos = useRef(0);
-  const onConnect = useCallback((params: Connection) => setEdges((eds) => addEdge({ ...params, type: '', sourceHandle: 'b' }, eds)), []);
+  const onConnect = useCallback((params: Connection) => setEdges((eds) => addEdge({ ...params, style: { stroke: '#2194FF' }, }, eds)), []);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -60,11 +52,14 @@ function ReactFlowComponent() {
     }
   }
 
-  const onElementClick = function (node: Node) {
-    /*  setTasks(tasks.map((t) => t.id === id ? {...t,isComplete:!t.isComplete} : t)); */
+  const teste = function () {
+    console.log("Ola mundo")
+  }
 
-    //setNodes(nodes.map((n) => n.id === node.id ? { ...n,  }))
-    console.log(node);
+  const onElementClick = function () {
+    setNodes(nodes.map((n: Node) => n.selected ?
+      { ...n, style: { ...rfStyle, boxShadow: '0px 2px 20px rgba(0, 159, 215, 0.8)', borderColor: '#009FD7' } } :
+      { ...n, style: { ...rfStyle } }));
   }
 
   const addNode = useCallback(() => {
@@ -77,7 +72,9 @@ function ReactFlowComponent() {
         {
           id: String(Date.now()),
           type: node.length > 0 ? '' : 'input',
-          data: { label: node.length + 1 },
+          data: {
+            label: (<ContentNode classIcon='ri-database-2-line' titleInfo='Integrator DB' />)
+          },
           sourcePosition: "right" as Position,
           targetPosition: "left" as Position,
           position: { x: xPos.current, y: validyXPosition(node.length, node) },
@@ -98,12 +95,14 @@ function ReactFlowComponent() {
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          connectionLineStyle={connectionLineStyle}
           /*     edgeTypes={{
                 buttonedge: <Button onClick={onEdgeClick} />,
               }} */
           className="touchdevice-flow"
           onConnect={onConnect}
-          onNodeClick={(event, node) => onElementClick(node)}
+          onNodeClick={onElementClick}
+          onMouseEnter={teste}
           fitView
         />
       </Box>
