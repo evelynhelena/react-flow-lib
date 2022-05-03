@@ -1,28 +1,17 @@
 
-import { getBezierPath, getEdgeCenter, Position } from 'react-flow-renderer';
+import { FC } from 'react';
+import { EdgeProps, getBezierPath, getEdgeCenter } from 'react-flow-renderer';
+import { useContentReactFlow } from '../../hooks/useContentReactFlow';
 
 import './styles.scss';
 
 const foreignObjectSize = 40;
 
-type CustomEdgeProps = {
-    id: string;
-    sourceX: number;
-    sourceY: number;
-    sourcePosition?: Position;
-    style?: object;
-    targetX: number;
-    targetY: number;
-    targetPosition?: Position;
-    markerEnd?: string
-}
+/* type CustomEdgeProps = GetBezierPathParams & GetCenterParams & React.SVGProps<SVGPathElement>; Merge de tipos */
 
-const onEdgeClick = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: String) => {
-    evt.stopPropagation();
-    alert(`remove ${id}`);
-};
 
-export default function ButtonEdge({
+
+export const ButtonEdge: FC<EdgeProps> = ({
     id,
     sourceX,
     sourceY,
@@ -32,7 +21,8 @@ export default function ButtonEdge({
     targetPosition,
     style = {},
     markerEnd,
-}: CustomEdgeProps) {
+}) => {
+    const { deleteEdgeButton } = useContentReactFlow();
     const edgePath = getBezierPath({
         sourceX,
         sourceY,
@@ -65,11 +55,9 @@ export default function ButtonEdge({
                 className="edgebutton-foreignobject"
                 requiredExtensions="http://www.w3.org/1999/xhtml"
             >
-                <body>
-                    <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
-                        x
-                    </button>
-                </body>
+                <button className="edgebutton" onClick={() => deleteEdgeButton(id)}>
+                    x
+                </button>
             </foreignObject>
         </>
     );

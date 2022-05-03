@@ -1,13 +1,14 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
+import { useContentReactFlow } from "../../hooks/useContentReactFlow";
 
 type ContentNodeProps = {
     classIcon: string;
     titleInfo: string;
     id: string;
-    deleteNodeButton: (id: string) => void;
 }
 
-export function ContentNode({ classIcon, titleInfo, id, deleteNodeButton }: ContentNodeProps) {
+export function ContentNode({ classIcon, titleInfo, id }: ContentNodeProps) {
+    const { deleteNodeButton } = useContentReactFlow();
     return (
         <>
             <IconButton
