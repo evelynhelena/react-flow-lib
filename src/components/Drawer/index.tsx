@@ -15,11 +15,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ReactFlowComponent from '../ReactFlow';
+
 import LogoTopaz from "../../assets/trn21-top-left-logo.png"
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
 import bgImage from "../../assets/bgImage.svg";
 import { DrawerRight } from '../DrawerRight';
+import { ReactFlowComponent } from '../reactFlow';
 
 const drawerWidth = 240;
 

@@ -11,7 +11,7 @@ const connectionLineStyle = { stroke: '#2194FF' };
 
 const edgeTypes = { buttonedge: ButtonEdge } as unknown as EdgeTypes //TODO REsolver problema de Tipagem;
 
-function ReactFlowComponent() {
+export function ReactFlowComponent() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onElementClick } = useContentReactFlow();
 
   return (
@@ -36,5 +36,3 @@ function ReactFlowComponent() {
     </Container>
   )
 }
-
-export default ReactFlowComponent;
