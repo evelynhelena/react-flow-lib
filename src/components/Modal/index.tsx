@@ -32,7 +32,7 @@ export function ModalComponent({ title, nodeContest, edgeContest }: ModalCompone
   const handleClose = () => setOpen(false);
   return (
     <>
-      {/* <Button onClick={handleOpen}>Ver Json</Button> */}
+      <Button onClick={handleOpen}>Ver Json</Button>
       <Modal
         open={open}
         onClose={handleClose}

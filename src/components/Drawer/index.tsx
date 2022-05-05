@@ -18,9 +18,11 @@ import ListItemText from '@mui/material/ListItemText';
 
 import LogoTopaz from "../../assets/trn21-top-left-logo.png"
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
-import bgImage from "../../assets/bgImage.svg";
+/* import bgImage from "../../assets/bgImage.svg";*/
+import fundoPontilhado1920 from "../../assets/fundoPontilhado_1920.svg";
 import { DrawerRight } from '../DrawerRight';
 import { ReactFlowComponent } from '../reactFlow';
+import { useDrawerRight } from '../../hooks/useDrawerRight';
 
 const drawerWidth = 240;
 
@@ -88,6 +90,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export function PersistentDrawerLeft() {
     const { addNode } = useContentReactFlow();
+    const { state } = useDrawerRight();
 
     const theme = useTheme();
     const [open, setOpen] = useState(false);
@@ -134,7 +137,7 @@ export function PersistentDrawerLeft() {
                     'flex',
                 backgroundColor:
                     "#EDF7FD",
-                backgroundImage: `url(${bgImage})`,
+                backgroundImage: `url(${fundoPontilhado1920})`,
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
             }}>
@@ -193,7 +196,7 @@ export function PersistentDrawerLeft() {
             <Main open={open}>
                 <DrawerHeader />
                 <ReactFlowComponent />
-                <DrawerRight />
+                {state && <DrawerRight />}
             </Main>
         </Box>
     );

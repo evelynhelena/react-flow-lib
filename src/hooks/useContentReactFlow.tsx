@@ -16,7 +16,7 @@ interface ContentReactFlowProviderProps {
     children: ReactNode
 }
 
-interface ItemMenu {
+export interface ItemMenu {
     id: string;
     component: string;
     description: string;
@@ -24,11 +24,13 @@ interface ItemMenu {
     configs: Array<string>;
     icon: string;
 }
+
 interface ContentReactFlowData {
     nodes: Node[];
     edges: Edge[];
+    nodeSelected: (Node & ItemMenu) | undefined;
     addNode: (data: ItemMenu) => void;
-    onElementClick: () => void;
+    onElementClick: (id: string) => void;
     onNodesChange: (changes: NodeChange[]) => void;
     onEdgesChange: (changes: EdgeChange[]) => void;
     onConnect: (params: Connection) => void;
@@ -37,11 +39,13 @@ interface ContentReactFlowData {
 
 }
 
+
 export const ContentReactFlowContext = createContext<ContentReactFlowData>({} as ContentReactFlowData);
 
 export function ContentReactFlowProvider({ children }: ContentReactFlowProviderProps) {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
+    const [nodeSelected, setNodeSelected] = useState<(Node & ItemMenu) | undefined>(undefined);
     const { toggleDrawer } = useDrawerRight();
     const yPos = useRef(80);
     const xPos = useRef(0);
@@ -70,10 +74,13 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
     }
 
 
-    const onElementClick = function () {
+    const onElementClick = function (id: string) {
         setNodes(nodes.map((n: Node) => n.selected ?
             { ...n, style: { ...rfStyle, boxShadow: '0px 2px 9px rgba(0, 159, 215, 0.8)', borderColor: '#009FD7' } } :
             { ...n, style: { ...rfStyle } }));
+        let teste = nodes.find(el => el.id === id) as (Node & ItemMenu) | undefined //TODO;
+        setNodeSelected(teste);
+        console.log(teste)
         toggleDrawer(true);
     }
 
@@ -88,8 +95,12 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
                     id: data.id,
                     type: node.length > 0 ? '' : 'input',
                     data: {
-                        label: (<ContentNode classIcon={data.icon} titleInfo={data.component} id={data.id} />)
+                        label: (<ContentNode classIcon={data.icon} titleInfo={data.component} id={data.id} />),
                     },
+                    operations: data.operations,
+                    description: data.description,
+                    component: data.component,
+                    configs: data.configs,
                     sourcePosition: "right" as Position,
                     targetPosition: "left" as Position,
                     position: { x: xPos.current, y: validyXPosition(node.length, node) },
@@ -112,7 +123,7 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
 
     return (
         <ContentReactFlowContext.Provider
-            value={{ nodes, edges, addNode, onNodesChange, onEdgesChange, onConnect, onElementClick, deleteNodeButton, deleteEdgeButton }}>
+            value={{ nodes, edges, addNode, onNodesChange, onEdgesChange, onConnect, onElementClick, deleteNodeButton, deleteEdgeButton, nodeSelected }}>
             {children}
         </ContentReactFlowContext.Provider>
     )

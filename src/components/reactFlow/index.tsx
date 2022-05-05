@@ -6,6 +6,7 @@ import { Container } from '@mui/material';
 import { ModalComponent } from '../Modal';
 import { ButtonEdge } from '../ButtonEdge';
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
+import { Node } from 'react-flow-renderer';
 
 const connectionLineStyle = { stroke: '#2194FF' };
 
@@ -28,7 +29,7 @@ export function ReactFlowComponent() {
           edgeTypes={edgeTypes}
           className="touchdevice-flow"
           onConnect={onConnect}
-          onNodeClick={onElementClick}
+          onNodeClick={(event: React.MouseEvent, node: Node) => onElementClick(node.id)}
           fitView
         />
       </Box>
