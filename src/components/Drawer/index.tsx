@@ -110,23 +110,23 @@ export function PersistentDrawerLeft() {
             description: "Componente para gerar um Id aleatório",
             operations: ["default", "randomId1632", "randomIdUUID"],
             icon: "ri-swap-line",
-            configs: ["outputField"]
+            configs: ["outputField1", "inputTeste", "verContaOutput"]
         },
         {
             id: "2",
             component: "connector-http",
-            description: "Componente para gerar um Id aleatório",
-            operations: ["default", "randomId1632", "randomIdUUID"],
+            description: "Componente para fazer conexão http",
+            operations: ["default", "Connector", "Connector 2", "Connector 3"],
             icon: "ri-links-line",
-            configs: ["outputField"]
+            configs: ["outputField2", "testeOutput", "httpInput"]
         },
         {
             id: "3",
             component: "connector-database",
-            description: "Componente para gerar um Id aleatório",
-            operations: ["default", "randomId1632", "randomIdUUID"],
+            description: "Componente para conectar ao banco de dados",
+            operations: ["default", "database 1", "database 2", "database 3"],
             icon: "ri-database-2-fill",
-            configs: ["outputField"]
+            configs: ["outputField3", "verExtratoOutput", "verExtratoInput"]
         },
     ];
 

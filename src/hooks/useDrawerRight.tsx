@@ -13,7 +13,7 @@ export const DrawerRightContext = createContext<DrawerRightData>({} as DrawerRig
 
 
 export function DrawerRightProvider({ children }: DrawerRightProps) {
-    const [state, setState] = useState(false); //TODO: mudar para false
+    const [state, setState] = useState(false);
 
     const toggleDrawer = useCallback((open: boolean) => {
         setState(open);

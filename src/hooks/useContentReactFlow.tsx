@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode, useContext, useRef, useCallback } from 'react';
+import { createContext, useState, ReactNode, useContext, useRef, useCallback, useEffect } from 'react';
 import { applyEdgeChanges, applyNodeChanges, addEdge, Connection, NodeChange, EdgeChange, Edge, Node, Position } from 'react-flow-renderer';
 import { ContentNode } from '../components/ContentNode';
 import { useDrawerRight } from './useDrawerRight';
@@ -23,12 +23,13 @@ export interface ItemMenu {
     operations: Array<string>;
     configs: Array<string>;
     icon: string;
+    label?: JSX.Element;
 }
 
 interface ContentReactFlowData {
     nodes: Node[];
     edges: Edge[];
-    nodeSelected: (Node & ItemMenu) | undefined;
+    nodeSelected: Node<ItemMenu> | undefined;
     addNode: (data: ItemMenu) => void;
     onElementClick: (id: string) => void;
     onNodesChange: (changes: NodeChange[]) => void;
@@ -36,6 +37,7 @@ interface ContentReactFlowData {
     onConnect: (params: Connection) => void;
     deleteNodeButton: (id: string) => void;
     deleteEdgeButton: (id: string) => void;
+    updateNode: (component: string, description: string, id: string) => void;
 
 }
 
@@ -43,9 +45,10 @@ interface ContentReactFlowData {
 export const ContentReactFlowContext = createContext<ContentReactFlowData>({} as ContentReactFlowData);
 
 export function ContentReactFlowProvider({ children }: ContentReactFlowProviderProps) {
-    const [nodes, setNodes] = useState<Node[]>([]);
+    const [nodes, setNodes] = useState<Node<ItemMenu>[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
-    const [nodeSelected, setNodeSelected] = useState<(Node & ItemMenu) | undefined>(undefined);
+    const [nodeSelected, setNodeSelected] = useState<Node<ItemMenu> | undefined>(undefined);
+    const [idNodeSelected, setIdNodeSelected] = useState("");
     const { toggleDrawer } = useDrawerRight();
     const yPos = useRef(80);
     const xPos = useRef(0);
@@ -78,34 +81,36 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
         setNodes(nodes.map((n: Node) => n.selected ?
             { ...n, style: { ...rfStyle, boxShadow: '0px 2px 9px rgba(0, 159, 215, 0.8)', borderColor: '#009FD7' } } :
             { ...n, style: { ...rfStyle } }));
-        let teste = nodes.find(el => el.id === id) as (Node & ItemMenu) | undefined //TODO;
-        setNodeSelected(teste);
-        console.log(teste)
+        let nodeFind = nodes.find(el => el.id === id);
+        setNodeSelected(nodeFind);
         toggleDrawer(true);
     }
 
 
-    const addNode = useCallback((data: ItemMenu) => {
+    const addNode = useCallback(({ component, description, operations, icon, id, configs }: ItemMenu) => {
         yPos.current += 0;
         xPos.current += 100;
-        setNodes((node: Node[]) =>
+        let idWhithTimestamp = id + Date.now();
+        setNodes((node) =>
             [
                 ...node,
                 {
-                    id: data.id,
-                    type: node.length > 0 ? '' : 'input',
                     data: {
-                        label: (<ContentNode classIcon={data.icon} titleInfo={data.component} id={data.id} />),
+                        label: (<ContentNode classIcon={icon} titleInfo={component} id={idWhithTimestamp} />),
+                        component,
+                        icon,
+                        configs,
+                        description,
+                        id: idWhithTimestamp,
+                        operations
                     },
-                    operations: data.operations,
-                    description: data.description,
-                    component: data.component,
-                    configs: data.configs,
-                    sourcePosition: "right" as Position,
-                    targetPosition: "left" as Position,
+                    type: node.length > 0 ? '' : 'input',
+                    id: idWhithTimestamp,
                     position: { x: xPos.current, y: validyXPosition(node.length, node) },
                     style: rfStyle,
-                },
+                    sourcePosition: "right" as Position,
+                    targetPosition: "left" as Position,
+                }
             ]
         );
     }, []);
@@ -121,9 +126,46 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
         setEdges((oldState) => oldState.filter((el) => el.id !== id));
     }, [])
 
+    const updateNode = useCallback((component: string, description: string, id: string) => {
+
+        //const { component, configs, description, operations, id };
+
+        setNodes((oldState) => oldState.map((el) => el.id === id ?
+            {
+                ...el,
+                data: {
+                    ...el.data,
+                    label: (<ContentNode classIcon={el.data.icon} titleInfo={component} id={id} />),
+                    component,
+                    description
+                }
+            }
+            : el
+        ))
+        setIdNodeSelected(id);
+    }, [])
+
+    useEffect(() => {
+        let nodeFind = nodes.find(el => el.id === idNodeSelected);
+        setNodeSelected(nodeFind);
+    }, [idNodeSelected])
+
     return (
         <ContentReactFlowContext.Provider
-            value={{ nodes, edges, addNode, onNodesChange, onEdgesChange, onConnect, onElementClick, deleteNodeButton, deleteEdgeButton, nodeSelected }}>
+            value={
+                {
+                    nodes,
+                    edges,
+                    addNode,
+                    onNodesChange,
+                    onEdgesChange,
+                    onConnect,
+                    onElementClick,
+                    deleteNodeButton,
+                    deleteEdgeButton,
+                    nodeSelected, updateNode
+                }
+            }>
             {children}
         </ContentReactFlowContext.Provider>
     )

@@ -1,24 +1,35 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { useDrawerRight } from '../../hooks/useDrawerRight';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import InputLabel from '@mui/material/InputLabel';
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
 
 export function DrawerRight() {
     const { state, toggleDrawer } = useDrawerRight();
-    const { nodeSelected } = useContentReactFlow();
+    const { nodeSelected, updateNode } = useContentReactFlow();
     const [operation, setOperation] = useState("default");
-    const [name, setName] = useState<string | undefined>("");
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [id, setId] = useState("");
 
-    console.log(nodeSelected)
-    if (!nodeSelected) {
-        //setName(nodeSelected?.component);
-    }
+    const setValues = useCallback(() => {
+        console.log(nodeSelected)
+        if (nodeSelected) {
+            setName(nodeSelected.data.component);
+            setDescription(nodeSelected.data.description);
+            setId(nodeSelected.data.id);
+        }
+    }, [nodeSelected])
+
+    useEffect(() => {
+        setValues();
+        console.log("entrou aqui")
+    }, [nodeSelected])
 
     const handleChangeOperation = (event: React.ChangeEvent<HTMLInputElement>) => {
         setOperation(event.target.value);
@@ -47,9 +58,8 @@ export function DrawerRight() {
                     size="small"
                     sx={{ width: "100%", fontSize: "14px", marginBottom: "20px" }}
                     placeholder="Digite o nome"
-
-                //value={name}
-                //onChange={handleChange}
+                    value={name}
+                    onChange={({ target }) => setName(target.value)}
                 />
 
                 <InputLabel sx={{ fontSize: '14px', color: '#333333', paddingBottom: 1 }}>Descrição</InputLabel>
@@ -59,6 +69,8 @@ export function DrawerRight() {
                     multiline
                     rows={3}
                     placeholder="Digite uma descrição"
+                    value={description}
+                    onChange={({ target }) => setDescription(target.value)}
                 />
 
 
@@ -71,12 +83,19 @@ export function DrawerRight() {
                     onChange={handleChangeOperation}
                     sx={{ width: "100%", fontSize: "14px", marginBottom: "20px" }}
                 >
-                    {nodeSelected?.data.operations.map((option: any) => (
+                    {nodeSelected?.data.operations.map((option: string) => (
                         <MenuItem key={option} value={option}>
                             {option}
                         </MenuItem>
                     ))}
                 </TextField>
+
+                <InputLabel sx={{ fontSize: '14px', color: '#333333', paddingBottom: 1 }}>Configurações</InputLabel>
+                {nodeSelected?.data.configs.map((config: string) => (
+                    <Box sx={{ fontSize: '13px', color: '#333333', paddingBottom: 1 }} key={config}>{config}</Box>
+                ))}
+
+                <Button onClick={() => updateNode(name, description, id)}>Atualizar</Button>
             </Box>
 
 
@@ -88,7 +107,7 @@ export function DrawerRight() {
         <Drawer
             anchor="right"
             open={state}
-        //onClose={() => toggleDrawer(false)}
+            onClose={() => toggleDrawer(false)}
         >
             {list()}
         </Drawer>
