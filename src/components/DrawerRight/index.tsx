@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { useDrawerRight } from '../../hooks/useDrawerRight';
-import { Button, IconButton } from '@mui/material';
+import { Button, Divider, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import InputLabel from '@mui/material/InputLabel';
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
@@ -18,7 +18,6 @@ export function DrawerRight() {
     const [id, setId] = useState("");
 
     const setValues = useCallback(() => {
-        console.log(nodeSelected)
         if (nodeSelected) {
             setName(nodeSelected.data.component);
             setDescription(nodeSelected.data.description);
@@ -28,8 +27,7 @@ export function DrawerRight() {
 
     useEffect(() => {
         setValues();
-        console.log("entrou aqui")
-    }, [nodeSelected])
+    }, [setValues])
 
     const handleChangeOperation = (event: React.ChangeEvent<HTMLInputElement>) => {
         setOperation(event.target.value);
@@ -37,10 +35,10 @@ export function DrawerRight() {
 
     const list = () => (
         <Box
-            sx={{ width: 260, display: 'flex', justifyContent: 'center', padding: "1rem", flexDirection: 'column', }}
+            sx={{ width: 260, display: 'flex', justifyContent: 'center', flexDirection: 'column', }}
             role="presentation"
         >
-            <Box sx={{ justifyContent: 'end', display: 'inherit' }}>
+            <Box sx={{ justifyContent: 'end', display: 'inherit', padding: "1rem" }}>
                 <IconButton
                     color="inherit"
                     aria-label="close drawer"
@@ -51,7 +49,7 @@ export function DrawerRight() {
                 </IconButton>
             </Box>
 
-            <Box component="form">
+            <Box component="form" sx={{ padding: "0 1rem" }}>
                 <InputLabel sx={{ fontSize: '14px', color: '#333333', paddingBottom: 1 }}>Nome</InputLabel>
                 <TextField
                     id="name"
@@ -94,11 +92,11 @@ export function DrawerRight() {
                 {nodeSelected?.data.configs.map((config: string) => (
                     <Box sx={{ fontSize: '13px', color: '#333333', paddingBottom: 1 }} key={config}>{config}</Box>
                 ))}
-
-                <Button onClick={() => updateNode(name, description, id)}>Atualizar</Button>
             </Box>
-
-
+            <Divider />
+            <Box sx={{ padding: "1rem" }}>
+                <Button sx={{ width: "100%" }} variant="outlined" onClick={() => updateNode(name, description, id)}>Atualizar</Button>
+            </Box>
         </Box>
     );
 

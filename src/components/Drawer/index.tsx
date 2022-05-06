@@ -198,6 +198,7 @@ export function PersistentDrawerLeft() {
                 <ReactFlowComponent />
                 {state && <DrawerRight />}
             </Main>
+            <Box sx={{ padding: 5, position: 'absolute', bottom: 0, backgroundColor: "#b33c3c", width: "100%" }}></Box>
         </Box>
     );
 }
