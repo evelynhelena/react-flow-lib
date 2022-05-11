@@ -6,7 +6,7 @@ import { Container } from '@mui/material';
 import { ModalComponent } from '../Modal';
 import { ButtonEdge } from '../ButtonEdge';
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
-import { Node } from 'react-flow-renderer';
+import { Node, Controls } from 'react-flow-renderer';
 
 const connectionLineStyle = { stroke: '#2194FF' };
 
@@ -15,11 +15,12 @@ const edgeTypes = { buttonedge: ButtonEdge } as unknown as EdgeTypes //TODO REso
 export function ReactFlowComponent() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onElementClick } = useContentReactFlow();
 
+
   return (
-    <Container sx={{ p: 5 }}>
+    <Container sx={{ p: 5, height: "100vh" }}>
       <ModalComponent title="Json" nodeContest={nodes} edgeContest={edges} />
 
-      <Box sx={{ height: '800px' }}>
+      <Box sx={{ height: '600px', width: '100%' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -30,8 +31,10 @@ export function ReactFlowComponent() {
           className="touchdevice-flow"
           onConnect={onConnect}
           onNodeClick={(event: React.MouseEvent, node: Node) => onElementClick(node.id)}
-          fitView
-        />
+
+        >
+          <Controls className='teste' showInteractive={false} />
+        </ReactFlow>
       </Box>
 
     </Container>
