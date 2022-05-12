@@ -3,10 +3,9 @@ import ReactFlow, { EdgeTypes } from 'react-flow-renderer';
 import Box from '@mui/material/Box';
 import "./styles.scss";
 import { Container } from '@mui/material';
-import { ModalComponent } from '../Modal';
 import { ButtonEdge } from '../ButtonEdge';
 import { useContentReactFlow } from '../../hooks/useContentReactFlow';
-import { Node, Controls } from 'react-flow-renderer';
+import { Node } from 'react-flow-renderer';
 
 const connectionLineStyle = { stroke: '#2194FF' };
 
@@ -18,9 +17,8 @@ export function ReactFlowComponent() {
 
   return (
     <Container sx={{ p: 5, height: "100vh" }}>
-      <ModalComponent title="Json" nodeContest={nodes} edgeContest={edges} />
 
-      <Box sx={{ height: '600px', width: '100%' }}>
+      <Box sx={{ height: '100vh', width: '100%' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -33,7 +31,6 @@ export function ReactFlowComponent() {
           onNodeClick={(event: React.MouseEvent, node: Node) => onElementClick(node.id)}
 
         >
-          <Controls className='teste' showInteractive={false} />
         </ReactFlow>
       </Box>
 

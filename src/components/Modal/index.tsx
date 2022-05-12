@@ -1,14 +1,14 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react'
 import { Node, Edge } from 'react-flow-renderer';
 
 type ModalComponentProps = {
   title: string;
   nodeContest: Node[];
   edgeContest: Edge[];
+  handleClose: () => void;
+  isOpen: boolean;
 }
 
 const style = {
@@ -25,16 +25,12 @@ const style = {
   overflowX: 'auto'
 };
 
-export function ModalComponent({ title, nodeContest, edgeContest }: ModalComponentProps) {
+export function ModalComponent({ title, nodeContest, edgeContest, handleClose, isOpen }: ModalComponentProps) {
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   return (
     <>
-      <Button onClick={handleOpen}>Ver Json</Button>
       <Modal
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

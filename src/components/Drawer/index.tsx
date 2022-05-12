@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -23,6 +23,10 @@ import fundoPontilhado1920 from "../../assets/fundoPontilhado_1920.svg";
 import { DrawerRight } from '../DrawerRight';
 import { ReactFlowComponent } from '../reactFlow';
 import { useDrawerRight } from '../../hooks/useDrawerRight';
+import { Button, ButtonProps } from '@mui/material';
+import { useReactFlow } from 'react-flow-renderer';
+import { ModalComponent } from '../Modal';
+
 
 const drawerWidth = 240;
 
@@ -89,8 +93,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 export function PersistentDrawerLeft() {
-    const { addNode } = useContentReactFlow();
+    const { addNode, nodes, edges, clearAll } = useContentReactFlow();
     const { state } = useDrawerRight();
+
+    const [openModal, setOpenModal] = useState(false);
+    const handleOpen = () => setOpenModal(true);
+    const handleClose = () => setOpenModal(false);
 
     const theme = useTheme();
     const [open, setOpen] = useState(false);
@@ -102,6 +110,19 @@ export function PersistentDrawerLeft() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    const { setViewport, zoomIn, zoomOut } = useReactFlow();
+    const handleTransform = useCallback(
+        () => {
+            setViewport({ x: 160, y: 160, zoom: 1 }, { duration: 800 });
+        },
+        [setViewport]
+    );
+
+    const ColorButton = styled(Button)<ButtonProps>(() => ({
+        '&:hover': {
+            backgroundColor: "#67BDE4",
+        },
+    }));
 
     const dataItemMenu: ListItemMenu = [
         {
@@ -197,7 +218,88 @@ export function PersistentDrawerLeft() {
                 <DrawerHeader />
                 <ReactFlowComponent />
                 {state && <DrawerRight />}
+
             </Main>
+            <Box sx={
+                {
+                    backgroundColor: "#fff",
+                    padding: 3, position: "fixed",
+                    bottom: 0,
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 4,
+                }
+            }
+            >
+                <Box sx={{ paddingRight: 3 }}>
+
+                    <Button onClick={() => zoomOut({ duration: 800 })}>
+                        <Typography
+                            sx={{
+                                color:
+                                    '#0B1641',
+                                fontSize:
+                                    '20px',
+                                paddingBottom:
+                                    '3px'
+                            }}
+                            variant="inherit"
+                            component="i"
+                            className="ri-zoom-out-line"
+                        />
+                    </Button>
+
+                    <Button onClick={handleTransform}>
+                        <Typography
+                            sx={{
+                                color:
+                                    '#0B1641',
+                                fontSize:
+                                    '20px',
+                                paddingBottom:
+                                    '3px'
+                            }}
+                            variant="inherit"
+                            component="i"
+                            className="ri-fullscreen-fill"
+                        />
+                    </Button>
+                    <Button onClick={() => zoomIn({ duration: 800 })}>
+                        <Typography
+                            sx={{
+                                color:
+                                    '#0B1641',
+                                fontSize:
+                                    '20px',
+                                paddingBottom:
+                                    '3px'
+                            }}
+                            variant="inherit"
+                            component="i"
+                            className="ri-zoom-in-line"
+                        />
+                    </Button>
+                </Box>
+
+
+                <ColorButton variant="outlined" onClick={clearAll}
+                    sx={
+                        { marginRight: 2, borderColor: "#009FD7", color: "#009FD7" }
+                    }
+                >Limpar</ColorButton>
+                <ColorButton variant="contained" onClick={handleOpen} sx={{ backgroundColor: "#009FD7" }}>Ver Json</ColorButton>
+            </Box>
+            <ModalComponent
+                title="Json"
+                nodeContest={nodes}
+                edgeContest={edges}
+                handleClose={handleClose}
+                isOpen={openModal}
+            />
         </Box>
+
+
     );
 }

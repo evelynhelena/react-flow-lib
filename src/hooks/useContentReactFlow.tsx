@@ -38,6 +38,7 @@ interface ContentReactFlowData {
     deleteNodeButton: (id: string) => void;
     deleteEdgeButton: (id: string) => void;
     updateNode: (component: string, description: string, id: string) => void;
+    clearAll: () => void;
 
 }
 
@@ -150,6 +151,11 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
         setNodeSelected(nodeFind);
     }, [idNodeSelected])
 
+    const clearAll = useCallback(() => {
+        setNodes([]);
+        setEdges([]);
+    }, [])
+
     return (
         <ContentReactFlowContext.Provider
             value={
@@ -163,7 +169,9 @@ export function ContentReactFlowProvider({ children }: ContentReactFlowProviderP
                     onElementClick,
                     deleteNodeButton,
                     deleteEdgeButton,
-                    nodeSelected, updateNode
+                    nodeSelected,
+                    updateNode,
+                    clearAll
                 }
             }>
             {children}
